@@ -4,4 +4,10 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastmcp>=3.3.1",
+    "loguru>=0.7.3",
+    "mcp[cli]>=1.27.1",
+    "pandas>=3.0.3",
+    "uvicorn>=0.47.0",
+]
