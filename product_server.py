@@ -16,7 +16,28 @@ except FileNotFoundError:
     PRODUCTS_DF = pd.DataFrame(columns=["id", "title", "price", "available"])
 
 
+def with_timeout(seconds: float):
+    """Decorator to add timeout to async tool functions."""
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            try:
+                return await asyncio.wait_for(
+                    func(*args, **kwargs), 
+                    timeout=seconds
+                )
+            except asyncio.TimeoutError:
+                return {
+                    "success": False,
+                    "error": "timeout",
+                    "message": f"Request timed out after {seconds} seconds.",
+                    "results": []
+                }
+        return wrapper
+    return decorator
+
 @app.tool()
+@with_timeout(5.0)
 async def search_products(query: str, 
                           max_price: Optional[float] = None, 
                           limit: int = 5) -> dict:
